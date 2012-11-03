@@ -12,7 +12,7 @@ url=http://go.googlecode.com/files/$file
 buildpack=$(dirname $(dirname $0))
 
 # LZOP
-if test -d $build/bin/lzop
+if test -d $cache/lzop
 then
     echo "-----> Skipping LZOP"
 else
@@ -20,7 +20,7 @@ else
     cd $cache
     curl http://www.oberhumer.com/opensource/lzo/download/lzo-2.06.tar.gz | tar xz
     cd lzo-2.06
-    ./configure optflags="-O3" debugflags="-g3 -ggdb"
+    ./configure optflags="-O3"
     make
     echo " done"
     
@@ -28,11 +28,18 @@ else
     cd $cache
     curl http://www.lzop.org/download/lzop-1.03.tar.gz | tar xz
     cd lzop-1.03
-    ./configure --prefix=/usr/local optflags="-O3" debugflags="-g3 -ggdb" CPPFLAGS="-I/$cache/lzo-2.06/include" LDFLAGS="-L/$cache/lzo-2.06/src/.libs"
+    ./configure --prefix=/usr/local optflags="-O3" CPPFLAGS="-I/$cache/lzo-2.06/include" LDFLAGS="-L/$cache/lzo-2.06/src/.libs"
     make
+    cp src/lzop $cache/lzop
     cp src/lzop $build/bin/lzop
     echo " done"
+    
+    echo "-----> Cleaning up"
+    rm -rf $cache/lzo-2.06
+    rm -rf $cache/lzop-1.03
+    echo "done"
 fi
+cp $cache/lzop $build/bin/lzop
 
 # Python
 venv=$cache/venv
