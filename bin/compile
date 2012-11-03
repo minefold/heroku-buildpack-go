@@ -12,7 +12,7 @@ url=http://go.googlecode.com/files/$file
 buildpack=$(dirname $(dirname $0))
 
 # LZOP
-if test -d $cache/lzop
+if test -f $cache/lzop
 then
     echo "-----> Skipping LZOP"
 else
